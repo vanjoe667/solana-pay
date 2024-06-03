@@ -1,23 +1,22 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import './solana-pay-button.style.css';
 import logo from '../../assets/images/solana-logo.svg';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { SolanaConfig } from './solana-pay-button.interface';
-import { clusterApiUrl, Connection, Transaction } from '@solana/web3.js'
+import { Connection, Transaction } from '@solana/web3.js'
 import { createQR } from '@solana/pay';
 import { extractDataFromSolanaTxRequest, getSerializedTx } from './solana-pay-button.helpers';
 import { testRecipient } from '../../interfaces/constants/mock-up.constants';
 import '@solana/wallet-adapter-react-ui/styles.css';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+const { REACT_APP_RPC_API_KEY } = process.env
 
 const SolanaPayButton = () => {
   const qrRef = useRef<HTMLDivElement>(null);
   const solanaUrl = 'solana:https%3A%2F%2Framp.scalex.africa%2Fsolana-pay%3Freference%3D3SJQCfmAjgmr6MspES2pBZwQJ9y57A8kws3FYsdg8chu%26amount%3D12?label=Solana+Pay&message=Thanks+for+your+purchase%21+%F0%9F%8D%AA';
 
-  const [loading, setLoading] = useState(false);
   const { wallet, publicKey, signTransaction } = useWallet();
-  const network = clusterApiUrl(WalletAdapterNetwork.Mainnet);
+  const rpcEndpoint = `https://rpc.shyft.to?api_key=${REACT_APP_RPC_API_KEY}`
 
   useEffect(() =>{
     const qr = createQR(solanaUrl, 512, 'azure');
@@ -36,8 +35,7 @@ const SolanaPayButton = () => {
       return;
     }
     
-    const connection = new Connection(network, SolanaConfig.commitment);
-    setLoading(true);
+    const connection = new Connection(rpcEndpoint, SolanaConfig.commitment);
 
     try {
       const parseSolanaPayUri = extractDataFromSolanaTxRequest(solanaUrl);
@@ -78,7 +76,6 @@ const SolanaPayButton = () => {
       console.error('Error fetching or signing transaction:', error);
       alert('Failed to complete transaction.');
     } finally {
-      setLoading(false);
       console.log('some error')
     }
   }, [wallet, publicKey, signTransaction]);
