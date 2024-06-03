@@ -28,6 +28,7 @@ export const getSerializedTx = async (payload: {reference: string, amount: numbe
     }
 }
 
+// no longer in use
 export const extractDataFromSolanaTxRequest = (uri: string) =>{
     const decodedUrl = decodeURIComponent(uri);
     const urlWithoutPrefix = decodedUrl.replace('solana:', '');

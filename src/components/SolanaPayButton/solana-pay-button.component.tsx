@@ -38,9 +38,6 @@ const SolanaPayButton = () => {
     const connection = new Connection(rpcEndpoint, SolanaConfig.commitment);
 
     try {
-      const parseSolanaPayUri = extractDataFromSolanaTxRequest(solanaUrl);
-      console.error({parseSolanaPayUri});
-
       const serializedTransaction = await getSerializedTx({
         reference: testRecipient.reference,
         amount: testRecipient.amount,
@@ -63,9 +60,7 @@ const SolanaPayButton = () => {
       const signedTransaction = await signTransaction(transaction);
       const signature = await connection.sendRawTransaction(signedTransaction.serialize());
 
-      console.log({signedTransaction, signature})
       const latestBlockHash = await connection.getLatestBlockhash();
-      console.log({latestBlockHash})
       await connection.confirmTransaction({
         signature,
         blockhash: latestBlockHash.blockhash,
@@ -78,7 +73,7 @@ const SolanaPayButton = () => {
     } finally {
       console.log('some error')
     }
-  }, [wallet, publicKey, signTransaction]);
+  }, [wallet, publicKey, signTransaction, rpcEndpoint]);
 
 
   return (
