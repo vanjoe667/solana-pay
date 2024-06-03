@@ -1,0 +1,21 @@
+.solana-pay-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: azure;
+    height: 100vh;
+}
+  
+.solana-pay-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.solana-pay-logo {
+  margin: 0px 8px -4px 0;
+}
