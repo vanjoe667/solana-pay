@@ -36,9 +36,9 @@ export const buildSerializedTransaction = async (payload: { addresses: {account:
   transaction.recentBlockhash = (await payload.connection.getLatestBlockhash(SolanaCommitments.Finalized)).blockhash;
 
   // Create memo instruction
-  // const memoInstruction = createMemoInstruction(payload.memo, [payer]);
-  // // Add memo instruction to the transaction
-  // transaction.add(memoInstruction);
+  const memoInstruction = createMemoInstruction(payload.memo, [payer]);
+  // Add memo instruction to the transaction
+  transaction.add(memoInstruction);
 
   // Add usdc transfer instruction to the transaction
   transaction.add(usdcTransferInstruction);
