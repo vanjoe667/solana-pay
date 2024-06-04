@@ -27,3 +27,7 @@ export const SolanaConfig: {
     cluster: SolanaClusters.Mainnet,
     commitment: SolanaCommitments.Confirmed,
 };
+
+export type MakeTransactionInputData = {
+    account: string;
+};

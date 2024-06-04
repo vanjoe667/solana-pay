@@ -6,6 +6,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@ledgerhq/errors": "^6.16.4",
     "@ledgerhq/hw-transport": "^6.30.6",
+    "@solana/buffer-layout": "^4.0.1",
     "@solana/pay": "^0.2.5",
     "@solana/spl-token": "^0.4.6",
     "@solana/wallet-adapter-base": "^0.9.23",
@@ -27,6 +28,7 @@
     "axios": "^1.7.2",
     "bignumber.js": "^9.1.2",
     "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
     "crypto-js": "^4.2.0",
     "https-browserify": "^1.0.0",
@@ -59,9 +61,6 @@
   "browser": {
     "crypto": false,
     "https": false
-  },
-  "overrides": {
-    "@ledgerhq/errors": "6.16.3"
   },
   "browserslist": {
     "production": [

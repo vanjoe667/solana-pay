@@ -6,14 +6,15 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { SolanaConfig } from './solana-pay-button.interface';
 import { Connection, Transaction } from '@solana/web3.js'
 import { createQR } from '@solana/pay';
-import { extractDataFromSolanaTxRequest, getSerializedTx } from './solana-pay-button.helpers';
+import { buildSerializedTransaction, getSerializedTx } from './solana-pay-button.helpers';
 import { testRecipient } from '../../interfaces/constants/mock-up.constants';
 import '@solana/wallet-adapter-react-ui/styles.css';
+import { Buffer } from 'buffer';
 const { REACT_APP_RPC_API_KEY } = process.env
 
 const SolanaPayButton = () => {
   const qrRef = useRef<HTMLDivElement>(null);
-  const solanaUrl = 'solana:https%3A%2F%2Framp.scalex.africa%2Fsolana-pay%3Freference%3D3SJQCfmAjgmr6MspES2pBZwQJ9y57A8kws3FYsdg8chu%26amount%3D12?label=Solana+Pay&message=Thanks+for+your+purchase%21+%F0%9F%8D%AA';
+  const solanaUrl = 'solana:https%3A%2F%2Framp.scalex.africa%2Fsolana-pay%3Freference%3DGDBJSc2MmwoAQRRURxUobu665PJb3scq4QYxHnJNwsAC%26amount%3D12?label=Solana+Pay&message=Thanks+for+your+purchase%21+%F0%9F%8D%AA';
 
   const { wallet, publicKey, signTransaction } = useWallet();
   const rpcEndpoint = `https://rpc.shyft.to?api_key=${REACT_APP_RPC_API_KEY}`
@@ -38,11 +39,17 @@ const SolanaPayButton = () => {
     const connection = new Connection(rpcEndpoint, SolanaConfig.commitment);
 
     try {
-      const serializedTransaction = await getSerializedTx({
-        reference: testRecipient.reference,
+      const serializedTransaction = await buildSerializedTransaction({
+        addresses: {
+          account: publicKey.toBase58(),
+          destinationAddress: testRecipient.recipient
+        },
         amount: testRecipient.amount,
-        account: publicKey.toBase58()
-      })
+        reference: testRecipient.reference,
+        memo: testRecipient.memo,
+        connection
+      });
+
 
       console.log({serializedTransaction})
       if (!serializedTransaction) {
@@ -50,8 +57,7 @@ const SolanaPayButton = () => {
         return;
       }
 
-      const bytes = Uint8Array.from(atob(serializedTransaction), c => c.charCodeAt(0));
-      const transaction = Transaction.from(bytes);
+      const transaction = Transaction.from(Buffer.from(serializedTransaction, 'base64'));
       if (!signTransaction) {
         alert('Wallet does not support transaction signing.');
         return;
